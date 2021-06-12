@@ -1,7 +1,7 @@
 {
   "target": "bmv2",
-  "p4info": "build/qos_to_dscp.p4.p4info.txt",
-  "bmv2_json": "build/qos_to_dscp.json",
+  "p4info": "build/cos_to_dscp.p4.p4info.txt",
+  "bmv2_json": "build/cos_to_dscp.json",
   "table_entries": [
     {
       "table": "MyIngress.ipv4_lpm",
