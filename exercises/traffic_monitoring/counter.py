@@ -77,9 +77,9 @@ def main(p4info_file_path, bmv2_file_path):
 
             if time % 60 == 0:
                 summary(60)
-            elif time % 15 == 0:
-                summary(15)
-            
+
+            # TODO: show last 15 seconds summary and last hour summary
+
             time += 1
             sleep(1)
 
