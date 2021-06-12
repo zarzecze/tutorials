@@ -1,7 +1,7 @@
 {
   "target": "bmv2",
-  "p4info": "build/basic.p4.p4info.txt",
-  "bmv2_json": "build/basic.json",
+  "p4info": "build/block_bpdu.p4.p4info.txt",
+  "bmv2_json": "build/block_bpdu.json",
   "table_entries": [
     {
       "table": "MyIngress.ipv4_lpm",
@@ -30,6 +30,26 @@
         "dstAddr": "08:00:00:00:02:22",
         "port": 1
       }
+    },
+
+
+    {
+      "table": "MyIngress.drop_mac_bpdu_exact",
+      "match": {
+        "hdr.ethernet.dstAddr": ["01:80:C2:00:00:00"],
+        "standard_metadata.ingress_port": [1]
+      },
+      "action_name": "MyIngress.drop",
+      "action_params": { }
+    },
+    {
+      "table": "MyIngress.drop_mac_bpdu_exact",
+      "match": {
+        "hdr.ethernet.dstAddr": ["01:00:0C:CC:CC:CD"],
+        "standard_metadata.ingress_port": [1]
+      },
+      "action_name": "MyIngress.drop",
+      "action_params": { }
     }
   ]
 }
