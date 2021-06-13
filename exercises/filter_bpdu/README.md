@@ -15,7 +15,7 @@ In your shell, run:
 This will:
 * compile `block_bpdu.p4`, and
 
-* start a Mininet instance with one switches (`s1`) connected to
+* start a Mininet instance with two switches (`s1` `s2`) connected to
     two hosts (`h1`, `h2`).
 * The hosts are assigned IPs of `10.0.1.1` and `10.0.2.2`.
   
