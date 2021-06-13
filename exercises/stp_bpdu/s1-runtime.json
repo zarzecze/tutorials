@@ -32,11 +32,10 @@
       }
     },
 
-
     {
       "table": "MyIngress.drop_mac_bpdu_exact",
       "match": {
-        "hdr.ethernet.dstAddr": ["01:80:C2:00:00:00"],
+        "hdr.ethernet.dstAddr": ["TODO target MAC address OF BPDU"],
         "standard_metadata.ingress_port": [1]
       },
       "action_name": "MyIngress.drop",
@@ -45,7 +44,7 @@
     {
       "table": "MyIngress.drop_mac_bpdu_exact",
       "match": {
-        "hdr.ethernet.dstAddr": ["01:00:0C:CC:CC:CD"],
+        "hdr.ethernet.dstAddr": ["TODO target MAC address of Cisco Per VLAN Spanning Tree"],
         "standard_metadata.ingress_port": [1]
       },
       "action_name": "MyIngress.drop",

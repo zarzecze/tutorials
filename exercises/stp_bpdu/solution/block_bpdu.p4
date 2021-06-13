@@ -90,8 +90,18 @@ control MyIngress(inout headers hdr,
         mark_to_drop(standard_metadata);
     }
 
-
-    // TODO: Add Table maching BPDU frame with drop action if hit.
+    table drop_mac_bpdu_exact {
+        key = {
+            hdr.ethernet.dstAddr: exact;
+            standard_metadata.ingress_port: exact;
+        }
+        actions = {
+            drop;
+            NoAction;
+        }
+        size = 1024;
+        default_action = NoAction();
+    }
     
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
         standard_metadata.egress_spec = port;
@@ -115,7 +125,9 @@ control MyIngress(inout headers hdr,
     
     apply {
         if (hdr.ethernet.isValid()) {
-            // TODO: If is BPDU then drop frame and exit.
+            if(drop_mac_bpdu_exact.apply().hit) {
+                return;
+            }
         }
 
         if (hdr.ipv4.isValid()) {

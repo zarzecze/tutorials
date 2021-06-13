@@ -16,8 +16,8 @@
       },
       "action_name": "MyIngress.ipv4_forward",
       "action_params": {
-        "dstAddr": "08:00:00:00:11:00",
-        "port": 2
+        "dstAddr": "08:00:00:00:01:11",
+        "port": 1
       }
     },
     {
@@ -27,15 +27,16 @@
       },
       "action_name": "MyIngress.ipv4_forward",
       "action_params": {
-        "dstAddr": "08:00:00:00:02:22",
-        "port": 1
+        "dstAddr": "08:00:00:00:22:00",
+        "port": 2
       }
     },
-    
+
+
     {
       "table": "MyIngress.drop_mac_bpdu_exact",
       "match": {
-        "hdr.ethernet.dstAddr": ["TODO target MAC address OF BPDU"],
+        "hdr.ethernet.dstAddr": ["01:80:C2:00:00:00"],
         "standard_metadata.ingress_port": [1]
       },
       "action_name": "MyIngress.drop",
@@ -44,7 +45,7 @@
     {
       "table": "MyIngress.drop_mac_bpdu_exact",
       "match": {
-        "hdr.ethernet.dstAddr": ["TODO target MAC address of Cisco Per VLAN Spanning Tree"],
+        "hdr.ethernet.dstAddr": ["01:00:0C:CC:CC:CD"],
         "standard_metadata.ingress_port": [1]
       },
       "action_name": "MyIngress.drop",
