@@ -2,11 +2,7 @@
 #include <core.p4>
 #include <v1model.p4>
 
-#define local_pat_port 1
-#define global_pat_port 2
-
 const bit<16> TYPE_IPV4 = 0x800;
-const bit<8>  TYPE_TCP  = 6;
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
@@ -37,29 +33,13 @@ header ipv4_t {
     ip4Addr_t dstAddr;
 }
 
-header tcp_t {
-    bit<16> srcPort;
-    bit<16> dstPort;
-    bit<32> seqNo;
-    bit<32> ackNo;
-    bit<4> dataOffset;
-    bit<3> res;
-    bit<3> ecn;
-    bit<6> ctrl;
-    bit<16> window;
-    bit<16> checksum;
-    bit<16> urgentPtr;
-}
-
 struct metadata {
-    bit<16> tcpLength;
-    bit<1> isDrop;
+    /* empty */
 }
 
 struct headers {
     ethernet_t   ethernet;
     ipv4_t       ipv4;
-    tcp_t        tcp;
 }
 
 /*************************************************************************
@@ -85,16 +65,7 @@ parser MyParser(packet_in packet,
 
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
-        meta.tcpLength = hdr.ipv4.totalLen - 16w20;
-        transition select(hdr.ipv4.protocol) {
-            TYPE_TCP: tcp;
-            default: accept;
-        }
-    }
-
-    state tcp {
-       packet.extract(hdr.tcp);
-       transition accept;
+        transition accept;
     }
 
 }
@@ -115,11 +86,12 @@ control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
 control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
-
     action drop() {
         mark_to_drop(standard_metadata);
-        meta.isDrop = 1;
     }
+
+
+    // TODO: Add Table maching BPDU frame with drop action if hit.
     
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
         standard_metadata.egress_spec = port;
@@ -127,7 +99,7 @@ control MyIngress(inout headers hdr,
         hdr.ethernet.dstAddr = dstAddr;
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
-    
+
     table ipv4_lpm {
         key = {
             hdr.ipv4.dstAddr: lpm;
@@ -140,29 +112,11 @@ control MyIngress(inout headers hdr,
         size = 1024;
         default_action = drop();
     }
-
-        
-    action local_pat_translate(ip4Addr_t dstAddr, bit<16> dstPort) {
-        // TODO: update tcp packet and ip datagram
-    }
-
-    table local_pat_exact {
-        // TODO: create definition for table local_pat_exact
-    }
-
-    action global_pat_translate(ip4Addr_t srcAddr, bit<16> srcPort) {
-        // TODO: update tcp packet and ip datagram
-
-    }
-    table global_pat_exact {
-        // TODO: create definition for table global_pat_exact
-    }
     
     apply {
-
-        // TODO: apply outside to inside translation
-        // TODO: apply inside to outside translation
-        // TODO: drop TCP packets that couldn't be translated
+        if (hdr.ethernet.isValid()) {
+            // TODO: If is BPDU then drop frame and exit.
+        }
 
         if (hdr.ipv4.isValid()) {
             ipv4_lpm.apply();
@@ -189,7 +143,7 @@ control MyComputeChecksum(inout headers  hdr, inout metadata meta) {
 	update_checksum(
 	    hdr.ipv4.isValid(),
             { hdr.ipv4.version,
-	          hdr.ipv4.ihl,
+	      hdr.ipv4.ihl,
               hdr.ipv4.diffserv,
               hdr.ipv4.totalLen,
               hdr.ipv4.identification,
@@ -201,31 +155,6 @@ control MyComputeChecksum(inout headers  hdr, inout metadata meta) {
               hdr.ipv4.dstAddr },
             hdr.ipv4.hdrChecksum,
             HashAlgorithm.csum16);
-
-    // TODO: Just a note that you need to update tcp checksum. It's already done, so nothing to do here :)
-    update_checksum_with_payload(
-        hdr.tcp.isValid(),
-        {
-            hdr.ipv4.srcAddr,
-            hdr.ipv4.dstAddr,
-            8w0,
-            hdr.ipv4.protocol,
-            meta.tcpLength,
-            hdr.tcp.srcPort,
-            hdr.tcp.dstPort,
-            hdr.tcp.seqNo,
-            hdr.tcp.ackNo,
-            hdr.tcp.dataOffset,
-            hdr.tcp.res,
-            hdr.tcp.ecn,
-            hdr.tcp.ctrl,
-            hdr.tcp.window,
-            hdr.tcp.urgentPtr
-        },
-        hdr.tcp.checksum,
-        HashAlgorithm.csum16
-    );
-
     }
 }
 
@@ -237,7 +166,6 @@ control MyDeparser(packet_out packet, in headers hdr) {
     apply {
         packet.emit(hdr.ethernet);
         packet.emit(hdr.ipv4);
-        packet.emit(hdr.tcp);
     }
 }
 

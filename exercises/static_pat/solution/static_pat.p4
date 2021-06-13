@@ -143,26 +143,57 @@ control MyIngress(inout headers hdr,
 
         
     action local_pat_translate(ip4Addr_t dstAddr, bit<16> dstPort) {
-        // TODO: update tcp packet and ip datagram
+        hdr.ipv4.dstAddr = dstAddr;
+        hdr.tcp.dstPort = dstPort;
     }
 
     table local_pat_exact {
-        // TODO: create definition for table local_pat_exact
+        key = {
+            hdr.ipv4.dstAddr: exact;
+            hdr.tcp.dstPort: exact;
+        }
+        actions = {
+            local_pat_translate;
+            drop;
+            NoAction;
+        }
+        size = 1024;
+        default_action = drop();
     }
 
     action global_pat_translate(ip4Addr_t srcAddr, bit<16> srcPort) {
-        // TODO: update tcp packet and ip datagram
-
+        hdr.ipv4.srcAddr = srcAddr;
+        hdr.tcp.srcPort = srcPort;
     }
+
     table global_pat_exact {
-        // TODO: create definition for table global_pat_exact
+        key = {
+            hdr.ipv4.srcAddr: exact;
+            hdr.tcp.srcPort: exact;
+        }
+        actions = {
+            global_pat_translate;
+            drop;
+            NoAction;
+        }
+        size = 1024;
+        default_action = drop();
     }
     
     apply {
+        meta.isDrop = 0;
 
-        // TODO: apply outside to inside translation
-        // TODO: apply inside to outside translation
-        // TODO: drop TCP packets that couldn't be translated
+        if(hdr.tcp.isValid() && standard_metadata.ingress_port == local_pat_port) {
+            global_pat_exact.apply();
+        }
+        
+        if(hdr.tcp.isValid() && standard_metadata.ingress_port == global_pat_port) {
+            local_pat_exact.apply();
+        }
+
+        if(meta.isDrop == 1) {
+            return;
+        }
 
         if (hdr.ipv4.isValid()) {
             ipv4_lpm.apply();
@@ -202,7 +233,6 @@ control MyComputeChecksum(inout headers  hdr, inout metadata meta) {
             hdr.ipv4.hdrChecksum,
             HashAlgorithm.csum16);
 
-    // TODO: Just a note that you need to update tcp checksum. It's already done, so nothing to do here :)
     update_checksum_with_payload(
         hdr.tcp.isValid(),
         {

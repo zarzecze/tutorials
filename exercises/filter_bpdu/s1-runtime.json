@@ -1,0 +1,54 @@
+{
+  "target": "bmv2",
+  "p4info": "build/block_bpdu.p4.p4info.txt",
+  "bmv2_json": "build/block_bpdu.json",
+  "table_entries": [
+    {
+      "table": "MyIngress.ipv4_lpm",
+      "default_action": true,
+      "action_name": "MyIngress.drop",
+      "action_params": { }
+    },
+    {
+      "table": "MyIngress.ipv4_lpm",
+      "match": {
+        "hdr.ipv4.dstAddr": ["10.0.1.1", 32]
+      },
+      "action_name": "MyIngress.ipv4_forward",
+      "action_params": {
+        "dstAddr": "08:00:00:00:01:11",
+        "port": 1
+      }
+    },
+    {
+      "table": "MyIngress.ipv4_lpm",
+      "match": {
+        "hdr.ipv4.dstAddr": ["10.0.2.2", 32]
+      },
+      "action_name": "MyIngress.ipv4_forward",
+      "action_params": {
+        "dstAddr": "08:00:00:00:22:00",
+        "port": 2
+      }
+    },
+
+    {
+      "table": "MyIngress.drop_mac_bpdu_exact",
+      "match": {
+        "hdr.ethernet.dstAddr": ["TODO target MAC address OF BPDU"],
+        "standard_metadata.ingress_port": [1]
+      },
+      "action_name": "MyIngress.drop",
+      "action_params": { }
+    },
+    {
+      "table": "MyIngress.drop_mac_bpdu_exact",
+      "match": {
+        "hdr.ethernet.dstAddr": ["TODO target MAC address of Cisco Per VLAN Spanning Tree"],
+        "standard_metadata.ingress_port": [1]
+      },
+      "action_name": "MyIngress.drop",
+      "action_params": { }
+    }
+  ]
+}
