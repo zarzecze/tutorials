@@ -16,10 +16,10 @@ typedef bit<32> ip4Addr_t;
 header ethernet_8021q_t {
     macAddr_t dstAddr;
     macAddr_t srcAddr;
-
-    // TODO add ethernet 802.1q encapsulation fields
-    // ....
-
+    bit<16>   tpid;
+    bit<3>    pri;
+    bit<1>    cfi;
+    bit<12>   vid;
     bit<16>   etherType;
 }
 
@@ -118,8 +118,23 @@ control MyIngress(inout headers hdr,
     apply {
         if (hdr.ipv4.isValid()) {
 
-            // TODO modify DSCP field (diffserv) depending on the CoS value (ethernet.pri)
-            // ...
+            if(hdr.ethernet.pri == 0) {
+                hdr.ipv4.diffserv = 15;
+            } else if (hdr.ethernet.pri == 1) {
+                hdr.ipv4.diffserv = 32;
+            } else if (hdr.ethernet.pri == 2) {
+                hdr.ipv4.diffserv = 9;
+            } else if (hdr.ethernet.pri == 3) {
+                hdr.ipv4.diffserv = 13;
+            } else if (hdr.ethernet.pri == 4) {
+                hdr.ipv4.diffserv = 11;
+            } else if (hdr.ethernet.pri == 5) {
+                hdr.ipv4.diffserv = 11;
+            } else if (hdr.ethernet.pri == 6) {
+                hdr.ipv4.diffserv = 20;
+            } else if (hdr.ethernet.pri == 7) {
+                hdr.ipv4.diffserv = 32;
+            }
 
             ipv4_lpm.apply();
         }
