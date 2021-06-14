@@ -5,6 +5,7 @@ The objective of this tutorial is to implement 802.1q CoS to IPv4 DSCP mapping.
 https://www.cisco.com/c/en/us/support/docs/smb/routers/cisco-rv-series-small-business-routers/smb1295-map-class-of-service-cos-settings-to-differentiated-services.html
 
 802.1q frame format is described here: https://en.wikipedia.org/wiki/IEEE_802.1Q#Frame_format
+
 You need to map field PCP (CoS priority) in ethernet 802.1q header to field DSCP in IPV4 Header https://en.wikipedia.org/wiki/IPv4#Header
 
 ## Step 1: Fill *TODOs* 
