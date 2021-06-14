@@ -95,6 +95,22 @@ control MyIngress(inout headers hdr,
         mark_to_drop(standard_metadata);
     }
 
+    action map_cos_to_dscp(bit<6> diffserv) {
+        hdr.ipv4.diffserv = diffserv;
+    }
+
+    table cos_to_dscp {
+        key = {
+            hdr.ethernet.pri: exact;
+        }
+        actions = {
+            map_cos_to_dscp;
+            NoAction;
+        }
+        size = 1024;
+        default_action = NoAction();
+    }
+
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
         standard_metadata.egress_spec = port;
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
@@ -118,23 +134,7 @@ control MyIngress(inout headers hdr,
     apply {
         if (hdr.ipv4.isValid()) {
 
-            if(hdr.ethernet.pri == 0) {
-                hdr.ipv4.diffserv = 15;
-            } else if (hdr.ethernet.pri == 1) {
-                hdr.ipv4.diffserv = 32;
-            } else if (hdr.ethernet.pri == 2) {
-                hdr.ipv4.diffserv = 9;
-            } else if (hdr.ethernet.pri == 3) {
-                hdr.ipv4.diffserv = 13;
-            } else if (hdr.ethernet.pri == 4) {
-                hdr.ipv4.diffserv = 11;
-            } else if (hdr.ethernet.pri == 5) {
-                hdr.ipv4.diffserv = 11;
-            } else if (hdr.ethernet.pri == 6) {
-                hdr.ipv4.diffserv = 20;
-            } else if (hdr.ethernet.pri == 7) {
-                hdr.ipv4.diffserv = 32;
-            }
+            cos_to_dscp.apply();
 
             ipv4_lpm.apply();
         }

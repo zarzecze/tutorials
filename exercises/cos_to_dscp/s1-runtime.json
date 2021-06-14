@@ -24,6 +24,87 @@
         "dstAddr": "08:00:00:00:02:22",
         "port": 2
       }
+    },
+
+    {
+      "table": "MyIngress.cos_to_dscp",
+      "match": {
+        "hdr.ethernet.pri": 0
+      },
+      "action_name": "MyIngress.map_cos_to_dscp",
+      "action_params": {
+        "diffserv": 15
+      }
+    },
+    {
+      "table": "MyIngress.cos_to_dscp",
+      "match": {
+        "hdr.ethernet.pri": 1
+      },
+      "action_name": "MyIngress.map_cos_to_dscp",
+      "action_params": {
+        "diffserv": 32
+      }
+    },
+    {
+      "table": "MyIngress.cos_to_dscp",
+      "match": {
+        "hdr.ethernet.pri": 2
+      },
+      "action_name": "MyIngress.map_cos_to_dscp",
+      "action_params": {
+        "diffserv": 9
+      }
+    },
+    {
+      "table": "MyIngress.cos_to_dscp",
+      "match": {
+        "hdr.ethernet.pri": 3
+      },
+      "action_name": "MyIngress.map_cos_to_dscp",
+      "action_params": {
+        "diffserv": 13
+      }
+    },
+    {
+      "table": "MyIngress.cos_to_dscp",
+      "match": {
+        "hdr.ethernet.pri": 4
+      },
+      "action_name": "MyIngress.map_cos_to_dscp",
+      "action_params": {
+        "diffserv": 11
+      }
+    },
+    {
+      "table": "MyIngress.cos_to_dscp",
+      "match": {
+        "hdr.ethernet.pri": 5
+      },
+      "action_name": "MyIngress.map_cos_to_dscp",
+      "action_params": {
+        "diffserv": 11
+      }
+    },
+    {
+      "table": "MyIngress.cos_to_dscp",
+      "match": {
+        "hdr.ethernet.pri": 6
+      },
+      "action_name": "MyIngress.map_cos_to_dscp",
+      "action_params": {
+        "diffserv": 20
+      }
+    },
+    {
+      "table": "MyIngress.cos_to_dscp",
+      "match": {
+        "hdr.ethernet.pri": 7
+      },
+      "action_name": "MyIngress.map_cos_to_dscp",
+      "action_params": {
+        "diffserv": 32
+      }
     }
   ]
 }

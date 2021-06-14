@@ -18,7 +18,7 @@ header ethernet_8021q_t {
     macAddr_t srcAddr;
 
     // TODO add ethernet 802.1q encapsulation fields
-    // ....
+    // check https://en.wikipedia.org/wiki/IEEE_802.1Q#Frame_format
 
     bit<16>   etherType;
 }
@@ -95,6 +95,10 @@ control MyIngress(inout headers hdr,
         mark_to_drop(standard_metadata);
     }
 
+    //TODO define action that takes dscp priority as parameter and sets diffserv in ipv4 header to this value
+
+    //TODO define table that takes search for CoS priority and launches above action with proper parameter
+
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
         standard_metadata.egress_spec = port;
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
@@ -118,8 +122,7 @@ control MyIngress(inout headers hdr,
     apply {
         if (hdr.ipv4.isValid()) {
 
-            // TODO modify DSCP field (diffserv) depending on the CoS value (ethernet.pri)
-            // ...
+            //TODO apply table that match CoS priority
 
             ipv4_lpm.apply();
         }
