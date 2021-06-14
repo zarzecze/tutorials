@@ -1,10 +1,23 @@
 # Simple static PAT for TCP trafic. 
 
 ## Introduction
-The objective of this tutorial is to PAT protocol for tcp trafic.
+The objective of this tutorial is to implement PAT protocol for TCP trafic.
 
 ## Step 1: Fill *TODOs* 
-You need to fill *TODOs* in file `static_pat.p4` that will handle translation of the TCP/IP addresses. If you have some problems you can check folder `solution` to see an example solution.
+You need to fill *TODOs* in file `static_pat.p4` that will handle translation of the TCP/IP addresses. 
+
+Your job will be to do the following:
+
+1. **TODO:** Fill actions that sets source/destination address and port to values passed as parameters (they will be used by global/local PAT tables)
+2. **TODO:** Fill global PAT table declaration (match source IP and port and map it to new IP and port)
+3. **TODO:** Fill local PAT table declaration (match destination IP and port and map it to new IP and port)
+4. **TODO:** Apply global PAT table to packets coming from "local" network
+5. **TODO:** Apply local PAT table to packets coming from "global" network
+6. **TODO:** Drop packets that couldn't be translated
+7. **TODO:** Add entries to tables declared above in `s1-runtime.json`
+
+If you have some problems you can check folder `solution` to see an example solution.
+
 
 ## Step 2: Run program
 In your shell, run:

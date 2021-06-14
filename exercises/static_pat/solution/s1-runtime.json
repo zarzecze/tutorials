@@ -24,7 +24,35 @@
         "dstAddr": "08:00:00:00:02:22",
         "port": 2
       }
+    },
+
+    {
+      "table": "MyIngress.local_pat_exact",
+      "match": {
+        "hdr.ipv4.dstAddr": ["20.0.0.2"],
+        "hdr.tcp.dstPort": [80]
+      },
+      "action_name": "MyIngress.local_pat_translate",
+      "action_params": {
+        "dstAddr": "10.0.1.1",
+        "dstPort": 8000
+      }
+    },
+
+  
+    {
+      "table": "MyIngress.global_pat_exact",
+      "match": {
+        "hdr.ipv4.srcAddr": ["10.0.1.1"],
+        "hdr.tcp.srcPort": [8000]
+      },
+      "action_name": "MyIngress.global_pat_translate",
+      "action_params": {
+        "srcAddr": "20.0.0.2",
+        "srcPort": 80
+      }
     }
 
+    
   ]
 }
