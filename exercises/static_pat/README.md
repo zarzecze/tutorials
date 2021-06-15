@@ -3,6 +3,12 @@
 ## Introduction
 The objective of this tutorial is to implement PAT protocol for TCP trafic.
 
+Static PAT example:
+
+![static pat example](./static_pat.png)
+
+Port **10.0.1.1:8000** should be available in global network (right side of router) with address **20.0.0.2:80**. Packets to others ports of 20.0.0.2 or to any port of 10.0.1.1 **should be dropped**.
+
 ## Step 1: Fill *TODOs* 
 You need to fill *TODOs* in file `static_pat.p4` that will handle translation of the TCP/IP addresses. 
 
