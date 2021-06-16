@@ -24,6 +24,16 @@
         "dstAddr": "08:00:00:00:02:22",
         "port": 2
       }
+    },
+    {
+      "table": "MyIngress.cos_to_dscp",
+      "match": {
+        "hdr.ethernet.pri":     // TODO: Enter correct source value here
+      },
+      "action_name": "MyIngress.map_cos_to_dscp",
+      "action_params": {
+        "diffserv":             // TODO: Enter correct tranlated value here
+      }
     }
 
   ]

@@ -90,7 +90,6 @@ control MyIngress(inout headers hdr,
         mark_to_drop(standard_metadata);
     }
 
-
     // TODO: Add Table maching BPDU frame with drop action if hit.
     
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {

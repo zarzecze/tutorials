@@ -14,8 +14,16 @@ Your job will be to do the following:
 
 1. **TODO:** Add missing fields to ethernet 802.1q header definition
 2. **TODO:** Define action that takes dscp priority as parameter and sets diffserv in ipv4 header to this value
-3. **TODO:** Define table that takes search for CoS priority and launches an action created above with proper parameter
+3. **TODO:** Define table that searches for CoS priority and launches an action created above with proper parameter
 4. **TODO:** Add entries to a table declared above in `s1-runtime.json`
+
+Example translation is proviaded in table below:
+
+| CoS  |  0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |
+|------|----|----|----|----|----|----|----|----|
+| DSCP | 15 | 32 |  9 | 13 | 11 | 11 | 20 | 30 |
+
+but you can choose to translate them the way you like.
 
 If you have some problems you can check folder `solution` to see an example solution.
 

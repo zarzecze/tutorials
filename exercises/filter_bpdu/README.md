@@ -4,8 +4,15 @@
 The objective of this tutorial is to create mechanism for blocking incoming BPDU frames arriving at certain ports of the switch.
 https://www.ciscopress.com/articles/article.asp?p=2995351&seqNum=3
 
+BPDU frames used in Spaning Tree Protocol have very interessting characteristic as they always have their destination address set to `01:80:C2:00:00:00` this makes the easy to detect and block/forward/proccess the frame.
+Cisco Per VLAN Spanning Tree uses diffrent destination mac address `01:00:0C:CC:CC:CD`
 ## Step 1: Fill *TODOs* 
-You need to fill *TODOs* in files [`block_bpdu.p4`, `s1-runtime.json`, `s2-runtime.json`] and that will detect and block BPDU frame. If you have some problems you can check folder `solution` to see an example solution.
+
+Your job will be to do the following:
+
+1. **TODO:** In `block_bpdu.p4` create table definition that will contain definition of BPDU frames
+2. **TODO:** In `block_bpdu.p4` apply the table and if frame was matched explicitly drop the frame
+3. **TODO:** In `s1-runtime.json` and `s2-runtime.json` add entries to the tables to drop all BPDU frames coming from host respectivly h1 nad h2. (We don't want them to become root of the spanning tree ;) )
 
 ## Step 2: Run program
 In your shell, run:
@@ -33,4 +40,3 @@ You can confirm that BPDU frame has been detected and explicitly blocked by grep
 ```
 cat logs/s1.log  | grep "Table 'MyIngress.drop_mac_bpdu_exact': hit" -A 9
 ```
-
